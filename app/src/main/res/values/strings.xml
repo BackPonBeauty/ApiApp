@@ -9,7 +9,7 @@
     <!-- API通信i関連 -->
     <string name="base_url">https://webservice.recruit.co.jp/hotpepper/gourmet/v1/</string>
     <string name="api_key">ab5ffd51cd0bed27</string>
-    <string name="api_keyword">ランチ</string>
+    <string name="api_keyword">居酒屋 奈良</string>
 
     <!-- Favorite関連 -->
     <string name="delete_favorite_dialog_title">お気に入りの削除</string>

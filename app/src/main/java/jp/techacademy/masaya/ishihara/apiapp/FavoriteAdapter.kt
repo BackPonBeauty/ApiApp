@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // お気に入り登録したShopを格納
     private val items = mutableListOf<FavoriteShop>()
@@ -19,15 +19,8 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
     // お気に入り画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
     var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
 
-    // お気に入り画面用のViewHolderオブジェクトの生成
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType) {
-            // ViewTypeがVIEW_TYPE_EMPTY（つまり、お気に入り登録が0件）の場合
-            VIEW_TYPE_EMPTY -> EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_favorite_empty, parent, false))
-            // 上記以外（つまり、1件以上のお気に入りが登録されている場合
-            else -> FavoriteItemViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_favorite, parent, false))
-        }
-    }
+    // Itemを押したときのメソッド
+    var onClickItem: ((FavoriteShop) -> Unit)? = null
 
     // 更新用のメソッド
     fun refresh(list: List<FavoriteShop>) {
@@ -48,6 +41,16 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         return if (items.isEmpty()) VIEW_TYPE_EMPTY else VIEW_TYPE_ITEM
     }
 
+    // お気に入り画面用のViewHolderオブジェクトの生成
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType) {
+            // ViewTypeがVIEW_TYPE_EMPTY（つまり、お気に入り登録が0件）の場合
+            VIEW_TYPE_EMPTY -> EmptyViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_favorite_empty, parent, false))
+            // 上記以外（つまり、1件以上のお気に入りが登録されている場合
+            else -> FavoriteItemViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_favorite, parent, false))
+        }
+    }
+
     // ViewHolderのバインド
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is FavoriteItemViewHolder) {
@@ -61,8 +64,12 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         holder.apply {
             rootView.apply {
                 setBackgroundColor(ContextCompat.getColor(context, if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray)) // 偶数番目と機数番目で背景色を変更させる
+                setOnClickListener {
+                    onClickItem?.invoke(data)
+                }
             }
             nameTextView.text = data.name
+            addressTextView.text = data.address
             Picasso.get().load(data.imageUrl).into(imageView) // Picassoというライブラリを使ってImageVIewに画像をはめ込む
             favoriteImageView.setOnClickListener {
                 onClickDeleteFavorite?.invoke(data)
@@ -77,6 +84,7 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         val nameTextView: TextView = view.findViewById(R.id.nameTextView)
         val imageView: ImageView = view.findViewById(R.id.imageView)
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
+        val addressTextView: TextView = view.findViewById(R.id.addressTextView)
     }
 
     // お気に入り登録がまだ行われていないとき
@@ -88,5 +96,4 @@ class FavoriteAdapter(private val context: Context): RecyclerView.Adapter<Recycl
         // Viewの種類を表現する定数、こちらはお気に入りが１件もないとき
         private const val VIEW_TYPE_EMPTY = 1
     }
-
 }

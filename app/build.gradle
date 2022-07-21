@@ -34,8 +34,11 @@ android {
         jvmTarget = '1.8'
     }
 
+
 }
+
 tasks.withType(JavaCompile) { options.encoding = "utf-8" }
+
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -50,7 +53,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     // OKHttp (HttpClient)
     implementation("com.squareup.okhttp3:okhttp:4.8.1")
-    implementation "com.squareup.okhttp3:logging-interceptor:4.8.1" // OkHttpのログ出力に必要
+    implementation "com.squareup.okhttp3:logging-interceptor:4.8.1" // OkHtt
     // Gson (Json解析ライブラリ)
     implementation 'com.google.code.gson:gson:2.8.6'
     // Picasso (画像ライブラリ)

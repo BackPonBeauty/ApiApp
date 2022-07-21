@@ -23,7 +23,7 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
     var onClickDeleteFavorite: ((Shop) -> Unit)? = null
 
     // Itemを押したときのメソッド
-    var onClickItem: ((String) -> Unit)? = null
+    var onClickItem: ((Shop) -> Unit)? = null
 
     fun refresh(list: List<Shop>) {
         update(list, false)
@@ -57,6 +57,8 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
         val nameTextView: TextView = view.findViewById(R.id.nameTextView)
         // レイアウトファイルからidがimageViewのImageViewオブジェクトを取得し、代入
         val imageView: ImageView = view.findViewById(R.id.imageView)
+        // レイアウトファイルからidがimageViewのImageViewオブジェクトを取得し、代入
+        val addresssTextView: TextView = view.findViewById(R.id.addressTextView)
         //
         val favoriteImageView: ImageView = view.findViewById(R.id.favoriteImageView)
     }
@@ -86,11 +88,13 @@ class ApiAdapter(private val context: Context): RecyclerView.Adapter<RecyclerVie
                 setBackgroundColor(ContextCompat.getColor(context,
                     if (position % 2 == 0) android.R.color.white else android.R.color.darker_gray))
                 setOnClickListener {
-                    onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc)
+               //     onClickItem?.invoke(if (data.couponUrls.sp.isNotEmpty()) data.couponUrls.sp else data.couponUrls.pc)
+                    onClickItem?.invoke(data)
                 }
             }
             // nameTextViewのtextプロパティに代入されたオブジェクトのnameプロパティを代入
             nameTextView.text = data.name
+            addresssTextView.text = data.address
             // Picassoライブラリを使い、imageViewにdata.logoImageのurlの画像を読み込ませる
             Picasso.get().load(data.logoImage).into(imageView)
             // 白抜きの星マークの画像を指定

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+import android.util.Log
 
 class MainActivity : AppCompatActivity(), FragmentCallback {
 
@@ -29,9 +31,32 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             tab.setText(viewPagerAdapter.titleIds[position])
         }.attach()
     }
+    override fun onClickItem(shop: Shop) {
+        val url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
+        val id : String = shop.id
+        val imageUrl: String = shop.logoImage
+        val name : String = shop.name
+        val address : String = shop.address
+        val which : Int = 1
+        val intent = Intent(this, WebViewActivity::class.java)
+        Log.d("xxxxxxxx1", id)
+        intent.putExtra("VA", id)
+   //    startActivity(intent)
+        WebViewActivity.start(this, url,id,imageUrl,name,address,which)
+    }
 
-    override fun onClickItem(url: String) {
-        WebViewActivity.start(this, url)
+    override fun onClickItem1(favoriteShop: FavoriteShop) {
+        val url =favoriteShop.url
+        val id : String = favoriteShop.id
+        val imageUrl: String = favoriteShop.imageUrl
+        val name : String = favoriteShop.name
+        val address : String = favoriteShop.address
+        val which : Int = 2
+        val intent = Intent(this, WebViewActivity::class.java)
+        Log.d("xxxxxxxx2", id)
+        intent.putExtra("VA", id)
+      //  startActivity(intent)
+        WebViewActivity.start(this, url,id,imageUrl,name,address,which)
     }
 
     override fun onAddFavorite(shop: Shop) { // Favoriteに追加するときのメソッド(Fragment -> Activity へ通知する)
@@ -39,14 +64,20 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
             id = shop.id
             name = shop.name
             imageUrl = shop.logoImage
+            address = shop.address
             url = if (shop.couponUrls.sp.isNotEmpty()) shop.couponUrls.sp else shop.couponUrls.pc
         })
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
+     //   (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as CouponFragment).updateView()
+
+
     }
 
     override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
         showConfirmDeleteFavoriteDialog(id)
     }
+
+
 
     private fun showConfirmDeleteFavoriteDialog(id: String) {
         AlertDialog.Builder(this)
@@ -64,6 +95,8 @@ class MainActivity : AppCompatActivity(), FragmentCallback {
         FavoriteShop.delete(id)
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_API] as ApiFragment).updateView()
         (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as FavoriteFragment).updateData()
+    //    (viewPagerAdapter.fragments[VIEW_PAGER_POSITION_FAVORITE] as CouponFragment).updateView()
+
     }
 
     companion object {

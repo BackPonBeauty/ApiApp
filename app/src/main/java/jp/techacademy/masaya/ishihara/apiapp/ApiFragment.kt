@@ -148,6 +148,7 @@ class ApiFragment: Fragment() {
     }
 
     companion object {
+
         private const val COUNT = 20 // 1回のAPIで取得する件数
     }
 }

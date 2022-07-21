@@ -9,7 +9,8 @@ open class FavoriteShop: RealmObject() {
     var id: String = ""
     var imageUrl: String = ""
     var name: String = ""
-    var url: String = ""
+    var url: String =""
+    var address: String = ""
 
     companion object {
         fun findAll(): List<FavoriteShop> = // お気に入りのShopを全件取得

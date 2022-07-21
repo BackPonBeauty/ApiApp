@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import jp.techacademy.masaya.ishihara.apiapp.ApiFragment.Companion
 import kotlinx.android.synthetic.main.fragment_favorite.*
 
 class FavoriteFragment: Fragment() {
@@ -33,9 +34,12 @@ class FavoriteFragment: Fragment() {
         // ここから初期化処理を行う
         // FavoriteAdapterのお気に入り削除用のメソッドの追加を行う
         favoriteAdapter.apply {
-            // Adapterの処理をそのままActivityに通知
-            onClickDeleteFavorite = {
+            onClickDeleteFavorite = { // Adapterの処理をそのままActivityに通知する
                 fragmentCallback?.onDeleteFavorite(it.id)
+            }
+            // Itemをクリックしたとき
+            onClickItem = {
+                fragmentCallback?.onClickItem1(it)
             }
         }
         // RecyclerViewの初期化
@@ -53,4 +57,5 @@ class FavoriteFragment: Fragment() {
         favoriteAdapter.refresh(FavoriteShop.findAll())
         swipeRefreshLayout.isRefreshing = false
     }
+
 }
