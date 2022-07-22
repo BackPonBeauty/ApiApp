@@ -17,14 +17,10 @@ var public_address: String = ""
 var public_which: Int = 1
 class WebViewActivity: AppCompatActivity(),FragmentCallback{
 
-    private val apiAdapter by lazy { ApiAdapter(this) }
+
     private val favoriteAdapter by lazy { FavoriteAdapter(this) }
-    private val itemsa = mutableListOf<Shop>()
+
     private val items = mutableListOf<FavoriteShop>()
-    // 一覧画面から登録するときのコールバック（FavoriteFragmentへ通知するメソッド)
-    var onClickAddFavorite: ((FavoriteShop) -> Unit)? = null
-    // 一覧画面から削除するときのコールバック（ApiFragmentへ通知するメソッド)
-    var onClickDeleteFavorite: ((FavoriteShop) -> Unit)? = null
 
     private val isFavorite = FavoriteShop.findBy(public_id) != null
 
@@ -43,19 +39,17 @@ class WebViewActivity: AppCompatActivity(),FragmentCallback{
             addAll(list) // itemsにlistを全て追加する
         }
     }
- //   override fun onBackPressed() {
- //       favoriteAdapter.notifyDataSetChanged()
- //       finish();
- //   }
+
+    override fun onBackPressed() {
+        MainActivity.start(this, "url")
+        finish();
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_web_view)
         webView.loadUrl(intent.getStringExtra(KEY_URL).toString())
-      //  val idd = intent.getStringExtra("VA")
-     //   textView.text = idd
 
-        val data = items
         Log.d("zzzzzzzzzzzzzz", public_id.toString())
 
         favoriteImageView.setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_border)
@@ -84,9 +78,7 @@ class WebViewActivity: AppCompatActivity(),FragmentCallback{
             public_address = address
             public_which = which
         }
-        private const val VIEW_PAGER_POSITION_API = 0
-        private const val VIEW_PAGER_POSITION_FAVORITE = 1
-    }
+     }
 
 
     override fun onClickItem(shop: Shop) {
@@ -110,12 +102,8 @@ class WebViewActivity: AppCompatActivity(),FragmentCallback{
             url = public_url
         })
         favoriteImageView.setImageResource(R.drawable.ic_star)
-  //      if(public_which == 1){
-    //        refresh1(itemsa)
-    //    }else{
             refresh(FavoriteShop.findAll())
-    //    }
-    }
+     }
     override fun onDeleteFavorite(id: String) { // Favoriteから削除するときのメソッド(Fragment -> Activity へ通知する)
       showConfirmDeleteFavoriteDialog(id)
     }
@@ -136,12 +124,6 @@ class WebViewActivity: AppCompatActivity(),FragmentCallback{
     private fun deleteFavorite(id: String) {
       FavoriteShop.delete(id)
       favoriteImageView.setImageResource(R.drawable.ic_star_border)
-   //   ApiFragment.updateData()
-  //    FavoriteFragment.updateData()
-   //     if(public_which == 2){
-    //        refresh1(itemsa)
-   //     }else{
             refresh(FavoriteShop.findAll())
-   //     }
     }
 }
